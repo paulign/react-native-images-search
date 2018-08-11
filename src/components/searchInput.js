@@ -18,20 +18,18 @@ export default class SearchInput extends Component {
                     inputStyle={{ borderBottomWidth: 0, height: 50, paddingRight: 20, color: colors.dark }}
                     underlineColorAndroid={'transparent'}
                 />
-                <View style={{ height: 50, width: 20, position: 'absolute', right: 20, justifyContent: 'center', alignItems: 'flex-end' }}>
+                <View style={styles.inputBtn}>
                     {this.props.value ? (<Icon
                         name='ios-close-circle'
-                        size={20}
-                        color='black'
-                        style={{ color: colors.dark }}
+                        size={25}
+                        color={colors.dark}
                         onPress={this.props.clearValue}
                     />
                     ) : (
                             <Icon
                                 name='ios-search'
-                                size={20}
-                                color='black'
-                                style={{ color: colors.dark }}
+                                size={30}
+                                color={colors.dark}
                             />)}
                 </View>
             </View>

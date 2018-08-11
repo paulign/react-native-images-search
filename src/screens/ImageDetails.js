@@ -1,29 +1,90 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-import { connect } from "react-redux";
+import { View, Text, Image, Dimensions, StatusBar, SafeAreaView, Linking } from 'react-native';
+import ImageZoom from 'react-native-image-pan-zoom';
+import { Button } from 'react-native-elements'
+import styles, { colors } from '../styles';
 
-class ImageDetails extends Component {
+export default class ImageDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ...props.navigation.state.params
+            ...props.navigation.state.params,
         }
+    }
 
-        console.log(this.state);
+    openLink = (url) => {
+        Linking.openURL(url)
+    }
+
+    renderEmptyState = () => {
+        return (
+            <View style={styles.container}>
+                <Text style={[styles.regularText, styles.lightText]}
+                >
+                    No image provided...
+                    </Text>
+            </View>
+        )
+    }
+
+    getImageSize = (width, height, screenWidth) => {
+        if (width > screenWidth) {
+            return {
+                width: screenWidth,
+                height: (screenWidth * height) / width,
+                
+            }
+        }
+        return { width, height  }
+    }
+
+    renderImage = (image) => {
+        const screenWidth = Dimensions.get('window').width;
+        const screenHeight = Dimensions.get('window').height;
+        const { width, height } = this.getImageSize(image.width, image.height, screenWidth);
+        console.log(width, height);
+
+        return (
+            <View>
+                <ImageZoom 
+                    cropWidth={screenWidth}
+                    cropHeight={screenHeight}
+                    imageWidth={screenWidth}
+                    imageHeight={screenWidth}>
+                    <Image
+                        cache={'force-cache'}
+                        style={{
+                            width: screenWidth,
+                            height: screenWidth
+                        }}
+                        source={{ uri: image.fullSizeUrl }}
+                    />
+                </ImageZoom>
+                <View style={styles.detailsTitleWrapper}>
+                    <Text style={styles.regularText}>{image.title}</Text>
+                    <View style={[styles.container, styles.contextLinkWrapper]}>
+                        <Button
+                            title={image.displayLink}
+                            backgroundColor={colors.dark}
+                            color={colors.light}
+                            onPress={() => this.openLink(image.contextLink)}
+                        />
+                    </View>
+                </View>
+            </View>
+        )
     }
     render() {
+        const { image } = this.state;
+
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text>Image Details</Text>
-            </View>
+            <SafeAreaView style={[styles.container, styles.imageDetailsContainer]}>
+                <StatusBar
+                    backgroundColor={colors.dark}
+                    barStyle="light-content"
+                />
+                {image ? this.renderImage(image) : this.renderEmptyState()}
+            </SafeAreaView >
         );
     }
 }
-
-const mapStateToProps = (state) => {
-    return {
-        images: state.images
-    }
-}
-
-export default connect(mapStateToProps)(ImageDetails)

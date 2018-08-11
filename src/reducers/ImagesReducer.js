@@ -7,7 +7,10 @@ import {
 const INITIAL_STATE = {
     images: [],
     searchQuery: null,
-    loading: false
+    loading: false,
+    loadingPagination: false,
+    emptyText: '',
+    currentPage: 1
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -15,33 +18,43 @@ export default (state = INITIAL_STATE, action) => {
         case IMAGES_LOAD_REQUEST:
             return {
                 ...state,
-                loading: true,
-                images: []
+                loading: action.payload.pagination ? false : true,
+                loadingPagination: action.payload.pagination,
+                emptyText: ''
             };
         case SEARCH_QUERY_CHANGE: 
             return {
                 ...state,
                 searchQuery: action.payload,
-                loading: false
+                loading: false,
+                loadingPagination: false,
+                currentPage: 1,
+                emptyText: ''
             }
         case IMAGES_CLEAR: {
             return {
                 ...state,
-                images: []
+                images: [],
+                emptyText: '',
+                currentPage: 1
             }
         }
         case IMAGES_LOAD_SUCCESS: {
             return {
                 ...state,
                 images: action.payload.images,
-                loading: false
+                loading: false,
+                loadingPagination: false,
+                emptyText: action.payload.emptyText,
+                currentPage: action.payload.currentPage
             }
         }
         case IMAGES_LOAD_ERROR: {
             return {
                 ...state,
-                images: [],
-                loading: false
+                loading: false,
+                loadingPagination: false,
+                emptyText: 'No images found...'
             }
         }
         default:

@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import { connect } from "react-redux";
 import {
-    getImages, onChangeSearchQuery,
-    clearImages
+    onChangeSearchQuery,
+    clearImages,
+    loadNextPage
 } from "../actions";
-import SearchInput from "../components/searchInput";
-import styles, { colors } from '../styles';
+import SearchInput from "../components/SearchInput";
+import Card from "../components/Card";
+import styles from '../styles';
 
 class Home extends Component {
     constructor(props) {
         super(props);
     }
 
-    goToDetails = () => {
-        this.props.navigation.navigate({ routeName: 'ImageDetails', params: { test: true } });
+    openImage = (image) => {
+        this.props.navigation.navigate({ routeName: 'ImageDetails', params: { image } });
     }
 
     onChangeText = async (searchQuery) => {
@@ -23,13 +25,71 @@ class Home extends Component {
     }
 
     onClearValue = () => {
-        this.props.clearImages
+        this.props.onChangeSearchQuery(null)
+    }
+
+    renderCard = (item) => {
+        return (
+            <Card
+                onPress={() => this.openImage(item.item)}
+                image={item.item}
+            />
+        )
+    }
+
+    renderPagination = () => {
+        const { loadingPagination } = this.props.search;
+        if (loadingPagination) {
+            return (
+                <View style={{width: '100%', padding: 10, alignItems: 'center'}}>
+                    <ActivityIndicator />
+                </View>
+            );
+        }
+
+        return null;
+    }
+
+    renderImagesList = () => {
+        const { images, searchQuery, emptyText } = this.props.search;
+
+        if (images && images.length) {
+            return (
+                <FlatList
+                    contentContainerStyle={styles.imagesList}
+                    numColumns={2}
+                    keyExtractor={(item) => item.id}
+                    data={this.props.search.images}
+                    renderItem={(item) => this.renderCard(item)}
+                    onEndReached={() => this.props.loadNextPage()}
+                    ListEmptyComponent={() => this.renderPagination()}
+                />
+            )
+        }
+
+        else if (searchQuery && searchQuery.length >= 3 && (!images || (images && !images.length))) {
+            return (
+                <Text
+                    style={styles.regularText}
+                >
+                    {emptyText}
+                </Text>
+            )
+        }
+
+        return null;
     }
 
     render() {
         return (
-            <View style={[styles.container, styles.homeContainer]}>
-                <Text style={{ fontSize: 40, marginVertical: 10, color: colors.dark }}>Image search</Text>
+            <View
+                style={[styles.container, styles.homeContainer]}
+            >
+                <Text
+                    style={styles.pageTitle}
+                >
+                    Image search
+                </Text>
                 <SearchInput
                     value={this.props.search.searchQuery}
                     clearValue={this.onClearValue}
@@ -38,14 +98,18 @@ class Home extends Component {
                         onChangeText: this.onChangeText
                     }}
                 />
-
-                {this.props.search.loading ? (<Text>Loading</Text>) : this.props.search.images.map((image, i) => {
-                    return (<Text key={String(i)}>{image.title}</Text>);
-                })}
-
-                <TouchableOpacity onPress={this.goToDetails}>
-                    <Text>Home Screen</Text>
-                </TouchableOpacity>
+                <View style={styles.container}>
+                    {this.props.search.loading ? (
+                        <View>
+                            <ActivityIndicator />
+                            <Text
+                                style={styles.regularText}
+                            >
+                                Loading..
+                            </Text>
+                        </View>
+                    ) : this.renderImagesList()}
+                </View>
             </View>
         );
     }
@@ -58,12 +122,8 @@ const mapStateToProps = (state) => {
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return
-}
-
 export default connect(mapStateToProps, {
-    getImages,
     clearImages,
-    onChangeSearchQuery
+    onChangeSearchQuery,
+    loadNextPage
 })(Home)

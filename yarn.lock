@@ -4732,6 +4732,17 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
+react-native-android-image-polyfill@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-android-image-polyfill/-/react-native-android-image-polyfill-1.0.0.tgz#f0b61bac0c6a91b8f8f81233ab1998613adf64ac"
+
+react-native-auto-height-image@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-auto-height-image/-/react-native-auto-height-image-1.0.1.tgz#ec31f45b1af247832d0f69f9e43675727f7e3ccc"
+  dependencies:
+    prop-types "^15.5.8"
+    react-native-android-image-polyfill "^1.0.0"
+
 react-native-config@^0.11.5:
   version "0.11.5"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.11.5.tgz#516cb7b6ec437c7739236ca075971db3aabdcb95"
@@ -4770,6 +4781,10 @@ react-native-google-image-search@^0.1.0:
   resolved "https://registry.yarnpkg.com/react-native-google-image-search/-/react-native-google-image-search-0.1.0.tgz#d535bc53c260dad740c2ffa5a8bb8128b64a4ad1"
   dependencies:
     react-native-config "^0.5.0"
+
+react-native-image-pan-zoom@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.7.tgz#1c066e66f8f345f5e1fc187f02d92c482952bb59"
 
 react-native-safe-area-view@^0.7.0:
   version "0.7.0"
@@ -5846,7 +5861,7 @@ uuid@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
 
-uuid@^3.1.0:
+uuid@^3.1.0, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
