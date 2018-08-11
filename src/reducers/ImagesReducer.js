@@ -1,7 +1,8 @@
 import {
     IMAGES_LOAD_REQUEST, SEARCH_QUERY_CHANGE,
     IMAGES_CLEAR, IMAGES_LOAD_SUCCESS,
-    IMAGES_LOAD_ERROR
+    IMAGES_LOAD_ERROR,
+    LOAD_PREV_RESULT
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -55,6 +56,13 @@ export default (state = INITIAL_STATE, action) => {
                 loading: false,
                 loadingPagination: false,
                 emptyText: 'No images found...'
+            }
+        }
+        case LOAD_PREV_RESULT: {
+            return {
+                ...state,
+                images: action.payload.images,
+                searchQuery: action.payload.searchQuery
             }
         }
         default:

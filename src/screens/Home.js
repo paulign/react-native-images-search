@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import {
     onChangeSearchQuery,
     clearImages,
-    loadNextPage
+    loadNextPage,
+    loadPrevSearchResult
 } from "../actions";
 import SearchInput from "../components/SearchInput";
 import Card from "../components/Card";
@@ -13,6 +14,24 @@ import styles from '../styles';
 class Home extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            isLoading: true
+        }
+    }
+
+    componentDidMount = () => {
+        this.loadScreen();
+    }
+
+    loadScreen = async () => {
+        try {
+            await this.props.loadPrevSearchResult();
+            await this.setState({ isLoading: false });
+        } catch (error) {
+            console.warn(error);
+            this.setState({ isLoading: false });
+        }
     }
 
     openImage = (image) => {
@@ -20,7 +39,6 @@ class Home extends Component {
     }
 
     onChangeText = async (searchQuery) => {
-        console.log(searchQuery);
         this.props.onChangeSearchQuery(searchQuery)
     }
 
@@ -48,7 +66,7 @@ class Home extends Component {
         const { loadingPagination } = this.props.search;
         if (loadingPagination) {
             return (
-                <View style={{width: '100%', padding: 10, alignItems: 'center'}}>
+                <View style={{ width: '100%', padding: 10, alignItems: 'center' }}>
                     <ActivityIndicator />
                 </View>
             );
@@ -88,6 +106,20 @@ class Home extends Component {
     }
 
     render() {
+        if (this.state.isLoading) {
+            return (
+                <View
+                    style={[styles.container, styles.homeContainer]}
+                >
+                    <ActivityIndicator />
+                    <Text
+                        style={styles.regularText}
+                    >
+                        Loading..
+                            </Text>
+                </View>
+            )
+        }
         return (
             <View
                 style={[styles.container, styles.homeContainer]}
@@ -123,7 +155,6 @@ class Home extends Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
         search: state.images,
     }
@@ -132,5 +163,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
     clearImages,
     onChangeSearchQuery,
-    loadNextPage
+    loadNextPage,
+    loadPrevSearchResult
 })(Home)

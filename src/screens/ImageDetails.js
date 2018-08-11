@@ -27,22 +27,9 @@ export default class ImageDetails extends Component {
         )
     }
 
-    getImageSize = (width, height, screenWidth) => {
-        if (width > screenWidth) {
-            return {
-                width: screenWidth,
-                height: (screenWidth * height) / width,
-                
-            }
-        }
-        return { width, height  }
-    }
-
     renderImage = (image) => {
         const screenWidth = Dimensions.get('window').width;
         const screenHeight = Dimensions.get('window').height;
-        const { width, height } = this.getImageSize(image.width, image.height, screenWidth);
-        console.log(width, height);
 
         return (
             <View>

@@ -1,11 +1,13 @@
 import imageSearch from "react-native-google-image-search";
+import { AsyncStorage } from 'react-native';
 import uuid from 'uuid';
 import {
-    IMAGES_LOAD_REQUEST, 
-    IMAGES_LOAD_SUCCESS, 
-    IMAGES_LOAD_ERROR, 
+    IMAGES_LOAD_REQUEST,
+    IMAGES_LOAD_SUCCESS,
+    IMAGES_LOAD_ERROR,
     SEARCH_QUERY_CHANGE,
-    IMAGES_CLEAR
+    IMAGES_CLEAR,
+    LOAD_PREV_RESULT
 } from './types';
 
 export const getImages = (query = null, page = 1, pagination = false) => {
@@ -16,9 +18,7 @@ export const getImages = (query = null, page = 1, pagination = false) => {
                     pagination
                 }
             });
-            console.log(query, page, pagination);
             const data = await imageSearch(query, 0, page);
-            console.log(data);
             let images = page == 1 ? [] : [].concat(getState().images.images);
 
             if (data && data.length) {
@@ -36,7 +36,9 @@ export const getImages = (query = null, page = 1, pagination = false) => {
                 });
                 images = images.concat(loadedImages);
             }
-            console.log('match queries', getState().images.searchQuery, query)
+            if (images.length) {
+                await saveResultToStorage({ searchQuery: query, images: images });
+            }
             if (getState().images.searchQuery === query) {
                 dispatch({
                     type: IMAGES_LOAD_SUCCESS, payload: {
@@ -51,7 +53,7 @@ export const getImages = (query = null, page = 1, pagination = false) => {
             }
 
         } catch (error) {
-            console.log(error);
+            console.warn(error);
             dispatch({ type: IMAGES_LOAD_ERROR });
         }
     }
@@ -60,9 +62,7 @@ export const getImages = (query = null, page = 1, pagination = false) => {
 const activeSearch = null;
 
 export const onChangeSearchQuery = (searchQuery) => {
-    console.log(searchQuery);
     return dispatch => {
-        console.log(searchQuery);
         dispatch({ type: SEARCH_QUERY_CHANGE, payload: searchQuery });
         if (!searchQuery || searchQuery.length < 3) {
             return dispatch(clearImages())
@@ -72,7 +72,6 @@ export const onChangeSearchQuery = (searchQuery) => {
             clearTimeout(activeSearch);
         }
         activeSearch = setTimeout(() => {
-            console.log('test timeout')
             dispatch(getImages(searchQuery));
         }, 1000);
     }
@@ -91,10 +90,32 @@ export const clearImages = () => {
 export const loadNextPage = () => {
     return (dispatch, getState) => {
         const { searchQuery, images, loading, loadingPagination } = getState().images;
-        
-        if(images.length && !loading && !loadingPagination) {
+
+        if (images.length && !loading && !loadingPagination) {
             let page = images.length;
             return dispatch(getImages(searchQuery, page, true));
-        }  
+        }
+    }
+}
+
+const saveResultToStorage = async (result) => {
+    try {
+        await AsyncStorage.setItem('@RNImagesSearch:latest_result', JSON.stringify(result));
+    } catch (error) {
+        console.warn(error);
+    }
+}
+
+export const loadPrevSearchResult = () => {
+    return async dispatch => {
+        try {
+            const data = await AsyncStorage.getItem('@RNImagesSearch:latest_result');
+            if (data) {
+                const result = JSON.parse(data);
+                dispatch({type: LOAD_PREV_RESULT, payload: result});
+            }
+        } catch (error) {
+            console.warn(error);
+        }
     }
 }

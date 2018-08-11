@@ -8,7 +8,6 @@ export default class Card extends Component {
     }
 
     render() {
-        console.log(this.props);
         const { image, onPress } = this.props;
         if (!image) {
             return null
