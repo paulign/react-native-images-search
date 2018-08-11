@@ -90,9 +90,9 @@ export const clearImages = () => {
 
 export const loadNextPage = () => {
     return (dispatch, getState) => {
-        const { searchQuery, images } = getState().images;
+        const { searchQuery, images, loading, loadingPagination } = getState().images;
         
-        if(images.length) {
+        if(images.length && !loading && !loadingPagination) {
             let page = images.length;
             return dispatch(getImages(searchQuery, page, true));
         }  

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Dimensions } from 'react-native';
 import { connect } from "react-redux";
 import {
     onChangeSearchQuery,
@@ -26,6 +26,13 @@ class Home extends Component {
 
     onClearValue = () => {
         this.props.onChangeSearchQuery(null)
+    }
+
+    getNumOfColumns = () => {
+        const screenWidth = Dimensions.get('window').width;
+        const cardOuterWidth = 170;
+
+        return Math.floor(screenWidth / cardOuterWidth);
     }
 
     renderCard = (item) => {
@@ -57,7 +64,7 @@ class Home extends Component {
             return (
                 <FlatList
                     contentContainerStyle={styles.imagesList}
-                    numColumns={2}
+                    numColumns={this.getNumOfColumns()}
                     keyExtractor={(item) => item.id}
                     data={this.props.search.images}
                     renderItem={(item) => this.renderCard(item)}
