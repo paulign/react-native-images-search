@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions, StatusBar, SafeAreaView, Linking, TouchableOpacity, PixelRatio } from 'react-native';
+import { View, Text, Image, Dimensions, StatusBar, SafeAreaView, Linking, TouchableOpacity } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';

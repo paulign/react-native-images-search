@@ -10,7 +10,6 @@
   "dependencies": {
     "react": "16.3.1",
     "react-native": "0.55.4",
-    "react-native-auto-height-image": "^1.0.1",
     "react-native-config": "^0.11.5",
     "react-native-elements": "^0.19.1",
     "react-native-google-image-search": "^0.1.0",
