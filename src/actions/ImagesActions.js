@@ -93,7 +93,7 @@ export const loadNextPage = () => {
 
         if (images.length && !loading && !loadingPagination) {
             let page = images.length;
-            return dispatch(getImages(searchQuery, page, true));
+            return dispatch(getImages(searchQuery, ++page, true));
         }
     }
 }

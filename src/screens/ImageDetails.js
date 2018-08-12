@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions, StatusBar, SafeAreaView, Linking, TouchableOpacity } from 'react-native';
+import { View, Text, Image, Dimensions, StatusBar, SafeAreaView, Linking, TouchableOpacity, PixelRatio } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -28,22 +28,29 @@ export default class ImageDetails extends Component {
         )
     }
 
+    goBack = () => {
+        this.props.navigation.goBack();
+    }
+
     renderImage = (image) => {
         const screenWidth = Dimensions.get('window').width;
         const screenHeight = Dimensions.get('window').height;
+
+        const width = screenWidth;
+        const height = image.height * screenWidth / image.width;
 
         return (
             <View>
                 <ImageZoom
                     cropWidth={screenWidth}
                     cropHeight={screenHeight}
-                    imageWidth={screenWidth}
-                    imageHeight={screenWidth}>
+                    imageWidth={width}
+                    imageHeight={height}>
                     <Image
                         cache={'force-cache'}
                         style={{
-                            width: screenWidth,
-                            height: screenWidth
+                            width: width,
+                            height: height
                         }}
                         source={{ uri: image.fullSizeUrl }}
                     />
@@ -62,10 +69,6 @@ export default class ImageDetails extends Component {
                 </View>
             </View>
         )
-    }
-
-    goBack = () => {
-        this.props.navigation.goBack();
     }
 
     renderBackButton = () => {
