@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions, StatusBar, SafeAreaView, Linking } from 'react-native';
+import { View, Text, Image, Dimensions, StatusBar, SafeAreaView, Linking, TouchableOpacity } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
-import { Button } from 'react-native-elements'
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
 import styles, { colors } from '../styles';
 
 export default class ImageDetails extends Component {
@@ -33,7 +34,7 @@ export default class ImageDetails extends Component {
 
         return (
             <View>
-                <ImageZoom 
+                <ImageZoom
                     cropWidth={screenWidth}
                     cropHeight={screenHeight}
                     imageWidth={screenWidth}
@@ -47,6 +48,7 @@ export default class ImageDetails extends Component {
                         source={{ uri: image.fullSizeUrl }}
                     />
                 </ImageZoom>
+
                 <View style={styles.detailsTitleWrapper}>
                     <Text style={styles.regularText}>{image.title}</Text>
                     <View style={[styles.container, styles.contextLinkWrapper]}>
@@ -61,6 +63,27 @@ export default class ImageDetails extends Component {
             </View>
         )
     }
+
+    goBack = () => {
+        this.props.navigation.goBack();
+    }
+
+    renderBackButton = () => {
+        return (
+            <TouchableOpacity
+                style={styles.backButton}
+                activeOpacity={0.8}
+                onPress={this.goBack}
+            >
+                <Icon
+                    name='ios-arrow-back'
+                    size={30}
+                    color={colors.blue}
+                />
+            </TouchableOpacity>
+        )
+    }
+
     render() {
         const { image } = this.state;
 
@@ -70,6 +93,7 @@ export default class ImageDetails extends Component {
                     backgroundColor={colors.dark}
                     barStyle="light-content"
                 />
+                {this.renderBackButton()}
                 {image ? this.renderImage(image) : this.renderEmptyState()}
             </SafeAreaView >
         );

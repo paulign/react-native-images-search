@@ -7,7 +7,9 @@ export const colors = {
     lightBrown: '#f4e9dc',
     dark: '#252525',
     lightTransparent: "rgba(255, 255, 255, 0.8)",
-    light: "#ffffff"
+    light: "#ffffff",
+    blue: '#2d38ff',
+    transparent: 'transparent'
 };
 
 export default StyleSheet.create({
@@ -77,5 +79,15 @@ export default StyleSheet.create({
     },
     imageDetailsContainer: {
         backgroundColor: colors.dark
+    },
+    backButton: {
+        position: 'absolute',
+        top: 5,
+        left: 10,
+        padding: 5,
+        zIndex: 1000,
+        backgroundColor: colors.transparent,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
